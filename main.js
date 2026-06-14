@@ -41,7 +41,8 @@ ipcMain.handle('print-to-pdf', async (event) => {
 
 // Handle COE image upload
 ipcMain.handle('upload-coe', async (event, data) => {
-  const { selectedRow, storageAddress } = data;
+  const { selectedRow } = data;
+  const storageAddress = data.storageAddress || data.imageAddress || data.storagePath;
   const result = await dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
     properties: ['openFile'],
     filters: [{ name: 'Images', extensions: ['jpg', 'png', 'jpeg'] }]
@@ -65,7 +66,8 @@ ipcMain.handle('upload-coe', async (event, data) => {
 
 // Handle ID image upload
 ipcMain.handle('upload-id', async (event, data) => {
-  const { selectedRow, storageAddress } = data;
+  const { selectedRow } = data;
+  const storageAddress = data.storageAddress || data.imageAddress || data.storagePath;
   const result = await dialog.showOpenDialog(BrowserWindow.getFocusedWindow(), {
     properties: ['openFile'],
     filters: [{ name: 'Images', extensions: ['jpg', 'png', 'jpeg'] }]

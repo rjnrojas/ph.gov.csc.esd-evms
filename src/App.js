@@ -67,9 +67,9 @@ function App() {
   const [collapsed, setCollapsed] = useState(false);
   const buttonStyle = {
     padding: "25px",
-    background: "#212369",
+    background: "#303947",
     border: "none",
-    color: "#fff",
+    color: "#e0e0e0",
     cursor: "pointer",
     borderRadius: "5px",
     textAlign: "left",
@@ -99,9 +99,13 @@ function App() {
     console.log("Position:", foundSignatory.position);
   };
 
-
+  // DEV location
   const imageAddress = 'C:\\Users\\Admin\\Desktop\\Development\\reference\\Scanned';
   const qrAddress = 'C:\\Users\\Admin\\Desktop\\Development\\reference\\qrcode'
+
+  // PROD location
+  // const imageAddress = 'Y:/ESDDMS/Scanned 2026';
+  // const qrAddress = 'Y:/ESDDMS/qrcode'
 
   const handleUploadCOE = async () => {
     const filename = await window.electronAPI.uploadCOE({ selectedRow, imageAddress });
@@ -128,7 +132,7 @@ function App() {
   };
 
   useEffect(() => {
-    axios.get('http://localhost:3001/api/verification')
+    axios.get('http://localhost:3001/api/requests')
       .then(response => setData(response.data))
       .catch(error => console.error(error));
   }, []);
@@ -308,8 +312,8 @@ function App() {
                             ))}
                           </select>
 
-                        <strong>QR Code: </strong><img src={`file://${qrAddress}/${selectedRow.qr}.png`} alt="QR Code" height="80px" width="auto" />
-                          
+                          <strong>QR Code: </strong><img src={`file://${qrAddress}/${selectedRow.qr}.png`} alt="QR Code" height="80px" width="auto" />
+
                           {/* OUTPUT */}
                           {/* {selectedSignatory && (
                             <div style={{
@@ -339,7 +343,7 @@ function App() {
             }}
           >
             {/* ROW 1 */}
-            <tr style={{ height: "180px" }}>
+            <tbody><tr style={{ height: "180px" }}>
               <td
                 colSpan={6}
                 style={{
@@ -349,67 +353,72 @@ function App() {
               </td>
             </tr>
 
-            {/* ROW 2 */}
-            <tr className="detail-item" style={{ height: "300px", maxHeight: "600px" }}>
-              <td
-                colSpan={6}
-                style={{
-                  verticalAlign: "top",
-                  padding: "0px",
-                  height: "600px",
-                  overflow: "hidden",
-                }}
-              >
-                <img src={`file://${selectedRow.authCOEImage}`} alt="Auth COE Image" height="auto" width="100%" style={{
-                  maxHeight: "600px", objectFit: "contain",
-                }} />
+              {/* ROW 2 */}
+              <tr className="detail-item" style={{ height: "300px", maxHeight: "600px" }}>
+                <td
+                  colSpan={6}
+                  style={{
+                    verticalAlign: "top",
+                    padding: "0px",
+                    height: "600px",
+                    overflow: "hidden"
+                  }}
+                >
+                  <img src={`file://${selectedRow.authCOEImage}`} alt="Auth COE Image" height="auto" width="100%" style={{
+                    maxHeight: "600px", objectFit: "contain", border: "1px solid #b1b1b1"
+                  }} />
 
-              </td>
-            </tr>
+                </td>
+              </tr>
 
-            {/* ROW 3 */}
-            <tr>
-              <td colSpan={3}>
-                <img src={`file://${selectedRow.authIDImage}`} alt="Auth ID Image" width="auto" height="200px" />
-              </td>
-              <td className="detail-item" colSpan={3}>
-                <div style={{ borderColor: '#2b104e', borderWidth: '3px', borderStyle: 'solid', borderRadius: '15px', padding: '-10px 0px' }}>
-                  <p style={{ fontFamily: 'TimesNewRoman', color: '#102b4e', lineHeight: '1.0', fontSize: 'medium' }}>
-                    Republic of the Philippines
-                    <br />CIVIL SERVICE COMMISSION
-                    <br />Regional Office X
-                    <br />Vamenta Blvd., Carmen, Cagayan de Oro City
-                    <br />
-                    <br />
-                    <strong>CERTIFIED AUTHENTICATED COPY OF COE</strong>
-                    <br />
-                    <br />
-                    <br />
-                    <br />
-                    <strong>{selectedSignatory.name}</strong>
-                    <hr />
-                    {selectedSignatory.position}
-                    <br />Date: {formatDate(selectedRow.daterouted)}
-                  </p>
-                </div>
-              </td>
-            </tr>
+              {/* ROW 3 */}
+              <tr>
+                <td colSpan={3} style={{textAlign: "center"}}>
+                  <img src={`file://${selectedRow.authIDImage}`} alt="Auth ID Image" width="auto" height="200px" />
+                </td>
+                <td className="detail-item" colSpan={3}>
+                  <div style={{ borderColor: '#2b104e', borderWidth: '3px', borderStyle: 'solid', borderRadius: '15px', padding: '-20px' }}>
+                    <p style={{ fontFamily: 'TimesNewRoman', color: '#102b4e', lineHeight: '1.0', fontSize: 'medium', margin: "5px" }}>
+                      Republic of the Philippines
+                      <br />CIVIL SERVICE COMMISSION
+                      <br />Regional Office X
+                      <br />Vamenta Blvd., Carmen, Cagayan de Oro City
+                      <br />
+                      <br />
+                      <strong>CERTIFIED AUTHENTICATED COPY OF COE</strong>
+                      <br />
+                      <br />
+                      <br />
+                      <br />
+                      <strong>{selectedSignatory.name}</strong>
+                    </p>
+                    <hr style={{ margin: "0" }} />
+                    <p  style={{ fontFamily: 'TimesNewRoman', color: '#102b4e', lineHeight: '1.0', fontSize: 'medium', margin: "5px" }}>
+                      {selectedSignatory.position}
+                      <br />Date: {formatDate(selectedRow.daterouted)}
+                    </p>
+                  </div>
+                </td>
+              </tr>
 
-            {/* ROW 4 */}
-            <tr style={{ height: "40px", paddingTop: "-10px" }}>
-              <td colSpan={5}>
+              {/* ROW 4 */}
+              <tr style={{ height: "40px", paddingTop: "-10px"}}>
+                <td colSpan={5}>
 
-              </td>
-              <td
-                colSpan={1}
-                style={{
-                  textAlign: "center"
-                }}
-              >
-                <img src={`file://${qrAddress}/${selectedRow.qr}.png`} alt="QR Code" height="100px" width="auto" />
+                </td>
+                <td
+                  colSpan={1}
+                  style={{
+                    textAlign: "center",
+                    margin: "0",
+                    padding: "0"
+                  }}
+                >
+                  <img src={`file://${qrAddress}/${selectedRow.qr}.png`} alt="QR Code" height="100px" width="auto"/>
 
-              </td>
-            </tr>
+                </td>
+              </tr>
+            </tbody>
           </table>
         </div>
       </div>
@@ -442,7 +451,7 @@ function App() {
           onClick={() => setCollapsed(!collapsed)}
           style={{
             padding: "10px",
-            background: "#1e2064",
+            background: "#2b3646",
             border: "none",
             color: "#fff",
             cursor: "pointer",
@@ -557,7 +566,7 @@ function App() {
 
         {/* AUTHENTICATION */}
         {activePage === "authentication" && (
-          <div>
+          <div style={cardStyle}>
             {renderNav('Requests for Authentication')}
             <div
               style={{
@@ -607,7 +616,7 @@ function App() {
 
         {/* BOTH */}
         {activePage === "both" && (
-          <div>
+          <div style={cardStyle}>
             {renderNav('Certification and Authentication')}
             <div
               style={{
