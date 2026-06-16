@@ -3,6 +3,7 @@ const { db } = require('./db');
 
 const app = express();
 const port = 3001;
+const host = db.host;
 
 app.use(express.json());
 
@@ -16,7 +17,6 @@ db.connect((err) => {
 
 app.get('/api/requests', (req, res) => {
   db.query("SELECT v.*, elig.*, doc.*, CONCAT(v.incomingID, '_', v.examno) AS 'qr' FROM tblverification2 v INNER JOIN tbleligibility elig ON elig.EligibilityID = v.eligtypeid INNER JOIN tbldoctype doc ON doc.doctypeid = v.doctypeid WHERE YEAR(v.daterouted) = YEAR(NOW()) ORDER BY v.priono ASC", (err, results) => {
-    
     if (err) throw err;
     res.json(results);
   });
@@ -64,5 +64,5 @@ app.get('/api/signatories', (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
+  console.log(`Server running on http://${host}:${port}`);
 });
