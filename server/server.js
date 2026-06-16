@@ -50,6 +50,19 @@ app.post('/api/update-id', (req, res) => {
   });
 });
 
+// Return signatories from tblactionofficer
+app.get('/api/signatories', (req, res) => {
+  const sql = "SELECT CONCAT(Lastname, ', ', Firstname, ' ', MI) AS name, Position AS position FROM tblactionofficer";
+  db.query(sql, (err, results) => {
+    if (err) {
+      console.error('Failed to fetch signatories:', err);
+      res.status(500).json({ error: 'Failed to fetch signatories' });
+      return;
+    }
+    res.json(results);
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server running on http://localhost:${port}`);
 });

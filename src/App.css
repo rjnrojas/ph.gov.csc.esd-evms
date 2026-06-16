@@ -38,7 +38,7 @@ thead {
 tbody tr {
   cursor: pointer;
   transition: background-color 0.2s ease;
-  border-bottom: 1px solid #ddd;
+  /* border-bottom: 1px solid #ccc; */
 }
 
 tbody tr:hover {

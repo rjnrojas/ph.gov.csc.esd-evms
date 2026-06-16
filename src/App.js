@@ -82,12 +82,20 @@ function App() {
   };
 
   // Authentication Signatories
-  const signatories = [
-    { name: "ADLAON, ENRI FEL V.", position: "Supervising HR Specialist" },
-    { name: "ROJAS, RALPH JIMBER N.", position: "Senior HR Specialist" },
-    { name: "ABAO, WILSON A.", position: "HR Specialist II" },
-  ];
-  const [selectedSignatory, setSelectedSignatory] = useState(signatories[0]);
+  const [signatories, setSignatories] = useState([]);
+  const [selectedSignatory, setSelectedSignatory] = useState(null);
+  
+  useEffect(() => {
+    axios.get('http://localhost:3001/api/signatories')
+      .then(response => {
+        setSignatories(response.data);
+        if (response.data && response.data.length > 0) {
+          setSelectedSignatory(response.data[0]);
+        }
+      })
+      .catch(error => console.error('Failed to load signatories:', error));
+  }, []);
+
   const handleChange = (e) => {
     const selectedName = e.target.value;
     const foundSignatory = signatories.find(
@@ -289,7 +297,7 @@ function App() {
                           <br />
                           {/* DROPDOWN */}
                           <select
-                            value={selectedSignatory.name}
+                            value={selectedSignatory ? selectedSignatory.name : ''}
                             onChange={handleChange}
                             style={{
                               width: "250px",
@@ -390,11 +398,11 @@ function App() {
                       <br />
                       <br />
                       <br />
-                      <strong>{selectedSignatory.name}</strong>
+                      <strong>{selectedSignatory ? selectedSignatory.name : ''}</strong>
                     </p>
                     <hr style={{ margin: "0" }} />
                     <p  style={{ fontFamily: 'TimesNewRoman', color: '#102b4e', lineHeight: '1.0', fontSize: 'medium', margin: "5px" }}>
-                      {selectedSignatory.position}
+                      {selectedSignatory ? selectedSignatory.position : ''}
                       <br />Date: {formatDate(selectedRow.daterouted)}
                     </p>
                   </div>
@@ -518,19 +526,6 @@ function App() {
         {activePage === "certification" && (
           <div style={cardStyle}>
             {renderNav('Requests for Certification')}
-            {/* <div
-              style={{
-                background: "#fff",
-                padding: "20px",
-                borderRadius: "10px",
-                boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-              }}
-            > */}
-            <div className="container" style={{
-              maxHeight: "700px",
-              overflowY: "auto",
-              border: "1px solid #ccc",
-            }}>
               <table style={{ width: "100%", borderCollapse: "collapse" }}>
                 <thead style={{ position: "sticky", top: 0, backgroundColor: "#2b2e83", zIndex: 1, color: "#f3f4f6" }}>
                   <tr>
@@ -560,27 +555,12 @@ function App() {
                 </tbody>
               </table>
             </div>
-          </div>
-          // </div>
         )}
 
         {/* AUTHENTICATION */}
         {activePage === "authentication" && (
           <div style={cardStyle}>
             {renderNav('Requests for Authentication')}
-            <div
-              style={{
-                background: "#fff",
-                padding: "20px",
-                borderRadius: "10px",
-                boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-              }}
-            >
-              <div className="container" style={{
-                // maxHeight: "500px",
-                overflowY: "auto",
-                border: "1px solid #ccc",
-              }}>
                 <table style={{ width: "100%", borderCollapse: "collapse" }}>
                   <thead style={{ position: "sticky", top: 0, backgroundColor: "#2b2e83", zIndex: 1, color: "#f3f4f6" }}>
                     <tr>
@@ -610,32 +590,17 @@ function App() {
                   </tbody>
                 </table>
               </div>
-            </div>
-          </div>
         )}
 
         {/* BOTH */}
         {activePage === "both" && (
           <div style={cardStyle}>
             {renderNav('Certification and Authentication')}
-            <div
-              style={{
-                background: "#fff",
-                padding: "20px",
-                borderRadius: "10px",
-                boxShadow: "0 2px 5px rgba(0,0,0,0.1)",
-              }}
-            >
-              <div className="container" style={{
-                // maxHeight: "500px",
-                overflowY: "auto",
-                border: "1px solid #ccc",
-              }}>
                 <table style={{ width: "100%", borderCollapse: "collapse" }}>
                   <thead style={{ position: "sticky", top: 0, backgroundColor: "#2b2e83", zIndex: 1, color: "#f3f4f6" }}>
                     <tr>
                       <th>Priority</th>
-                      <th>Transaction</th>
+                      {/* <th>Transaction</th> */}
                       <th>Name</th>
                       <th>Date of Birth</th>
                       <th>Place of Birth</th>
@@ -648,7 +613,7 @@ function App() {
                     {data.filter(row => String(row.doctypeid) === "5" && matchesSearch(row) && matchesRouteDate(row)).map((row, index) => (
                       <tr key={index} onClick={() => setSelectedRow(row)}>
                         <td style={{ textAlign: "center" }}>{row.priono}</td>
-                        <td>{row.shortname}</td>
+                        {/* <td>{row.shortname}</td> */}
                         <td>{row.lastname}, {row.firstname} {row.mi}.</td>
                         <td style={{ textAlign: "right" }}>{formatDate(row.dateofbirth)}</td>
                         <td>{row.placeofbirth}</td>
@@ -660,8 +625,6 @@ function App() {
                   </tbody>
                 </table>
               </div>
-            </div>
-          </div>
         )}
       </div>
     </div>
