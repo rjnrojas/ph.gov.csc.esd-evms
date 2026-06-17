@@ -6,5 +6,11 @@
 </head>
 <body>
   <div id="root"></div>
+  <script>
+    // Renderer override defaults — can be changed per-deployment
+    window.__API_HOST__ = window.__API_HOST__ || 'localhost';
+    window.__IMAGE_ADDRESS__ = window.__IMAGE_ADDRESS__ || 'Y:/ESDDMS/Scanned 2026';
+    window.__QR_ADDRESS__ = window.__QR_ADDRESS__ || 'Y:/ESDDMS/qrcode';
+  </script>
 </body>
 </html>

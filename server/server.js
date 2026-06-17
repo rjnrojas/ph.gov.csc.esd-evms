@@ -1,3 +1,4 @@
+require('dotenv').config();
 const express = require('express');
 const { db } = require('./db');
 
@@ -12,7 +13,7 @@ db.connect((err) => {
     console.error('MySQL connection failed:', err);
     return;
   }
-  console.log('Connected to MySQL');
+  console.log('Connected to MySQL Server');
 });
 
 app.get('/api/requests', (req, res) => {

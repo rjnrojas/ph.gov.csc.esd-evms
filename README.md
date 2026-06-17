@@ -26,20 +26,24 @@ Columns displayed: lastname, firstname, mi, authCOEImage, authIDImage
 
 - List Certification and Authentication of Eligibilities requests
 - View Eligibility details
-
+- Create Filter:
+    * by date
+    * by doc status
 - Show/Upload/Update COE image/photo
 - Show/Upload/Update ID image/photo
     * Selects image to upload
     * Copies image to the filepath configured, renamed to 'yyyy-mm-dd_' + lastname + <'-COE' or '-ID'> . fileextension
-
+- Generate / link QR code
+- Select Signatory for the authenticated copy
 - Print Authenticated copy
 
 ## Under contstruction
 - Create/print CoE in SecPa
-- Select Signatory for the authenticated copy
-- Generate / link QR code
 - Store/Set filepath for COE and ID upload
-- Create Filter:
-    * by date
-    * by doc status
     
+
+## Build the app
+- For 64-bit application
+npm run make
+- For 32-bit application
+npx electron-forge package --platform=win32 --arch=ia32

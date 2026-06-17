@@ -112,12 +112,6 @@ button:hover {
   border: 1px solid #ccc;
 }
 
-.container {
-  /* padding: 50px; */
-  /* max-width: 1200px; */
-  /* margin: 50px 50px; */
-}
-
 .print-button {
   position: absolute;
   top: 5%;

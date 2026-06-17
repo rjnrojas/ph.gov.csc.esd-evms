@@ -3,15 +3,16 @@ import axios from 'axios';
 import './App.css';
 import cscLogo from '../assets/img/logo-csc.png';
 import * as TfiIcons from 'react-icons/tfi';
-// import { TfiLayoutMenuSeparated } from "react-icons/tfi";
-// import { TfiBook } from "react-icons/tfi";
-// import { TfiLayoutGrid2Alt } from "react-icons/tfi";
+import appConfig from './config.client.js';
+
 
 function App() {
   const [data, setData] = useState([]);
   const [selectedRow, setSelectedRow] = useState(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [routeDate, setRouteDate] = useState(new Date().toISOString().slice(0, 10));
+
+  const apiHost = appConfig.host;
 
   const formatDate = (value) => {
     if (!value) return '';
@@ -86,7 +87,7 @@ function App() {
   const [selectedSignatory, setSelectedSignatory] = useState(null);
   
   useEffect(() => {
-    axios.get('http://localhost:3001/api/signatories')
+    axios.get(`http://${apiHost}:3001/api/signatories`)
       .then(response => {
         setSignatories(response.data);
         if (response.data && response.data.length > 0) {
@@ -102,24 +103,21 @@ function App() {
       signatory => signatory.name === selectedName
     );
     setSelectedSignatory(foundSignatory);
-
-    console.log("Name:", foundSignatory.name);
-    console.log("Position:", foundSignatory.position);
   };
 
   // DEV location
-  const imageAddress = 'C:\\Users\\Admin\\Desktop\\Development\\reference\\Scanned';
-  const qrAddress = 'C:\\Users\\Admin\\Desktop\\Development\\reference\\qrcode'
+  // const imageAddress = 'C:/Users/Admin/Desktop/Development/reference/Scanned';
+  // const qrAddress = 'C:/Users/Admin/Desktop/Development/reference/qrcode'
 
   // PROD location
-  // const imageAddress = 'Y:/ESDDMS/Scanned 2026';
-  // const qrAddress = 'Y:/ESDDMS/qrcode'
+  const imageAddress = appConfig.imageAddress || 'Y:/ESDDMS/Scanned 2026';
+  const qrAddress = appConfig.qrAddress || 'Y:/ESDDMS/qrcode';
 
   const handleUploadCOE = async () => {
     const filename = await window.electronAPI.uploadCOE({ selectedRow, imageAddress });
     if (filename) {
       console.log('selectedRow.incomingid:', selectedRow.incomingid);
-      await axios.post('http://localhost:3001/api/update-coe', {
+      await axios.post(`http://${apiHost}:3001/api/update-coe`, {
         incomingid: selectedRow.incomingid,
         authCOEImage: filename
       });
@@ -131,7 +129,7 @@ function App() {
     const filename = await window.electronAPI.uploadID({ selectedRow, imageAddress });
     if (filename) {
       console.log('selectedRow.incomingid:', selectedRow.incomingid);
-      await axios.post('http://localhost:3001/api/update-id', {
+      await axios.post(`http://${apiHost}:3001/api/update-id`, {
         incomingid: selectedRow.incomingid,
         authIDImage: filename
       });
@@ -140,7 +138,7 @@ function App() {
   };
 
   useEffect(() => {
-    axios.get('http://localhost:3001/api/requests')
+    axios.get(`http://${apiHost}:3001/api/requests`)
       .then(response => setData(response.data))
       .catch(error => console.error(error));
   }, []);
@@ -148,7 +146,7 @@ function App() {
 
   if (selectedRow) {
     return (
-      <div className="container detail-container">
+      <div className="detail-container">
 
         {/* Layout for viewing and uploading of COE and ID images, as well as printing of Authenticated copy of COE. */}
         <div className="no-print">
@@ -481,28 +479,40 @@ function App() {
           onClick={() => setActivePage("dashboard")}
           style={buttonStyle}
         >
-          {collapsed ? <TfiIcons.TfiPieChart /> : "Dashboard"}
+          {collapsed ? 
+          // <TfiIcons.TfiPieChart />
+          "DB"
+           : "Dashboard"}
         </button>
 
         <button
           onClick={() => setActivePage("certification")}
           style={buttonStyle}
         >
-          {collapsed ? <TfiIcons.TfiBook /> : "Certification"}
+          {collapsed ? 
+          // <TfiIcons.TfiBook />
+          "CT"
+           : "Certification"}
         </button>
 
         <button
           onClick={() => setActivePage("authentication")}
           style={buttonStyle}
         >
-          {collapsed ? <TfiIcons.TfiBookmarkAlt /> : "Authentication"}
+          {collapsed ? 
+          // <TfiIcons.TfiBookmarkAlt />
+          "AU"
+           : "Authentication"}
         </button>
 
         <button
           onClick={() => setActivePage("both")}
           style={buttonStyle}
         >
-          {collapsed ? <TfiIcons.TfiGallery /> : "Both"}
+          {collapsed ? 
+          // <TfiIcons.TfiGallery />
+          "CA"
+           : "Cert | Auth"}
         </button>
       </div>
 
@@ -541,7 +551,7 @@ function App() {
                 </thead>
                 <tbody>
                   {data.filter(row => String(row.doctypeid) === "3" && matchesSearch(row) && matchesRouteDate(row)).map((row, index) => (
-                    <tr key={index} onClick={() => setSelectedRow(row)}>
+                    <tr style={{ borderBottom: "1px solid #ccc" }} key={index} onClick={() => setSelectedRow(row)}>
                       <td style={{ textAlign: "center" }}>{row.priono}</td>
                       <td>{row.shortname}</td>
                       <td>{row.lastname}, {row.firstname} {row.mi}.</td>
@@ -576,7 +586,7 @@ function App() {
                   </thead>
                   <tbody>
                     {data.filter(row => String(row.doctypeid) === "2" && matchesSearch(row) && matchesRouteDate(row)).map((row, index) => (
-                      <tr key={index} onClick={() => setSelectedRow(row)}>
+                      <tr style={{ borderBottom: "1px solid #ccc" }} key={index} onClick={() => setSelectedRow(row)}>
                         <td style={{ textAlign: "center" }}>{row.priono}</td>
                         <td>{row.shortname}</td>
                         <td>{row.lastname}, {row.firstname} {row.mi}.</td>
@@ -611,7 +621,7 @@ function App() {
                   </thead>
                   <tbody>
                     {data.filter(row => String(row.doctypeid) === "5" && matchesSearch(row) && matchesRouteDate(row)).map((row, index) => (
-                      <tr key={index} onClick={() => setSelectedRow(row)}>
+                      <tr style={{ borderBottom: "1px solid #ccc" }} key={index} onClick={() => setSelectedRow(row)}>
                         <td style={{ textAlign: "center" }}>{row.priono}</td>
                         {/* <td>{row.shortname}</td> */}
                         <td>{row.lastname}, {row.firstname} {row.mi}.</td>
