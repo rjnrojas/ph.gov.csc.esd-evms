@@ -20,25 +20,6 @@ function createWindow() {
   win.loadFile('dist/index.html');
 }
 
-ipcMain.handle('print-to-pdf', async (event) => {
-  const win = BrowserWindow.getFocusedWindow();
-  const data = await win.webContents.printToPDF({
-    pageSize: {
-      width: 8.5 * 25400, // 8.5 inches in microns
-      height: 13 * 25400  // 13 inches in microns
-    },
-    marginsType: 0
-  });
-  const result = await dialog.showSaveDialog(win, {
-    title: 'Save PDF',
-    defaultPath: 'print-preview.pdf',
-    filters: [{ name: 'PDF', extensions: ['pdf'] }]
-  });
-  if (!result.canceled) {
-    fs.writeFileSync(result.filePath, data);
-  }
-});
-
 // Handle COE image upload
 ipcMain.handle('upload-coe', async (event, data) => {
   const { selectedRow } = data;

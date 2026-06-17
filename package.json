@@ -1,9 +1,9 @@
 {
-  "name": "electron-react-express-mysql",
+  "name": "ESD-MS",
   "version": "1.0.0",
-  "description": "Electron app with React frontend, Express backend, and MySQL",
+  "description": "An Electron Application for ESD Authentication of Eligibility Management",
   "main": "main.js",
-  "author": "porakero",
+  "author": "Ralph Jimber N. Rojas",
   "scripts": {
     "start": "electron-forge start",
     "dev": "concurrently \"npm run server\" \"wait-on http://localhost:3001 && npm run watch\" \"wait-on http://localhost:3001 && npm start\"",
